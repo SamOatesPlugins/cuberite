@@ -134,7 +134,7 @@ public:
 	/** Returns whether the player is climbing (ladders, vines etc.) */
 	bool IsClimbing(void) const;
 
-	virtual void TeleportToCoords(double a_PosX, double a_PosY, double a_PosZ) override;
+	virtual void TeleportToCoords(cWorld * a_World, double a_PosX, double a_PosY, double a_PosZ) override;
 
 	// tolua_begin
 

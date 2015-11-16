@@ -387,7 +387,7 @@ public:
 	virtual void TeleportToEntity(cEntity & a_Entity);
 
 	/** Teleports to the coordinates specified */
-	virtual void TeleportToCoords(double a_PosX, double a_PosY, double a_PosZ);
+	virtual void TeleportToCoords(cWorld * a_World, double a_PosX, double a_PosY, double a_PosZ);
 
 	/** Schedules a MoveToWorld call to occur on the next Tick of the entity */
 	void ScheduleMoveToWorld(cWorld * a_World, Vector3d a_NewPosition, bool a_SetPortalCooldown = false);

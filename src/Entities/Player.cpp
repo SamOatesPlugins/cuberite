@@ -1069,7 +1069,7 @@ void cPlayer::Respawn(void)
 	// Extinguish the fire:
 	StopBurning();
 
-	TeleportToCoords(GetLastBedPos().x, GetLastBedPos().y, GetLastBedPos().z);
+	TeleportToCoords(GetWorld(), GetLastBedPos().x, GetLastBedPos().y, GetLastBedPos().z);
 
 	SetVisible(true);
 }
@@ -1342,12 +1342,21 @@ unsigned int cPlayer::AwardAchievement(const eStatistic a_Ach)
 
 
 
-void cPlayer::TeleportToCoords(double a_PosX, double a_PosY, double a_PosZ)
+void cPlayer::TeleportToCoords(cWorld * a_World, double a_PosX, double a_PosY, double a_PosZ)
 {
 	//  ask plugins to allow teleport to the new position.
 	if (!cRoot::Get()->GetPluginManager()->CallHookEntityTeleport(*this, m_LastPosition, Vector3d(a_PosX, a_PosY, a_PosZ)))
 	{
-		SetPosition(a_PosX, a_PosY, a_PosZ);
+		if (GetWorld() != a_World)
+		{
+			Vector3d newPosition = Vector3d(a_PosX, a_PosY, a_PosZ);
+			MoveToWorld(m_NewWorld, false, newPosition);
+		}
+		else
+		{
+			SetPosition(a_PosX, a_PosY, a_PosZ);
+		}
+
 		m_LastGroundHeight = static_cast<float>(a_PosY);
 		m_bIsTeleporting = true;
 
@@ -2322,7 +2331,7 @@ void cPlayer::Detach()
 			{
 				if (!cBlockInfo::IsSolid(m_World->GetBlock(x, y, z)) && cBlockInfo::IsSolid(m_World->GetBlock(x, y - 1, z)))
 				{
-					TeleportToCoords(x, y, z);
+					TeleportToCoords(GetWorld(), x, y, z);
 					return;
 				}
 			}

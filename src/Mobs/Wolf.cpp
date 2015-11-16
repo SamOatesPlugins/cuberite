@@ -236,7 +236,7 @@ void cWolf::TickFollowPlayer()
 		if (Distance > 20)
 		{
 			Callback.OwnerPos.y = FindFirstNonAirBlockPosition(Callback.OwnerPos.x, Callback.OwnerPos.z);
-			TeleportToCoords(Callback.OwnerPos.x, Callback.OwnerPos.y, Callback.OwnerPos.z);
+			TeleportToCoords(m_World, Callback.OwnerPos.x, Callback.OwnerPos.y, Callback.OwnerPos.z);
 		}
 		else
 		{

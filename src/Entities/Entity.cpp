@@ -1393,7 +1393,7 @@ bool cEntity::DetectPortal()
 					if (IsPlayer())
 					{
 						cPlayer * Player = reinterpret_cast<cPlayer *>(this);
-						Player->TeleportToCoords(Player->GetLastBedPos().x, Player->GetLastBedPos().y, Player->GetLastBedPos().z);
+						Player->TeleportToCoords(Player->GetWorld(), Player->GetLastBedPos().x, Player->GetLastBedPos().y, Player->GetLastBedPos().z);
 						Player->GetClientHandle()->SendRespawn(dimOverworld);
 					}
 
@@ -1673,19 +1673,28 @@ void cEntity::StopBurning(void)
 
 void cEntity::TeleportToEntity(cEntity & a_Entity)
 {
-	TeleportToCoords(a_Entity.GetPosX(), a_Entity.GetPosY(), a_Entity.GetPosZ());
+	TeleportToCoords(a_Entity.GetWorld(), a_Entity.GetPosX(), a_Entity.GetPosY(), a_Entity.GetPosZ());
 }
 
 
 
 
 
-void cEntity::TeleportToCoords(double a_PosX, double a_PosY, double a_PosZ)
+void cEntity::TeleportToCoords(cWorld  * a_World, double a_PosX, double a_PosY, double a_PosZ)
 {
 	//  ask the plugins to allow teleport to the new position.
 	if (!cRoot::Get()->GetPluginManager()->CallHookEntityTeleport(*this, m_LastPosition, Vector3d(a_PosX, a_PosY, a_PosZ)))
 	{
-		SetPosition(a_PosX, a_PosY, a_PosZ);
+		if (GetWorld() != a_World)
+		{
+			Vector3d newPosition = Vector3d(a_PosX, a_PosY, a_PosZ);
+			MoveToWorld(m_NewWorld, false, newPosition);
+		}
+		else
+		{
+			SetPosition(a_PosX, a_PosY, a_PosZ);
+		}
+		
 		m_World->BroadcastTeleportEntity(*this);
 	}
 }
