@@ -51,17 +51,7 @@ void cHorse::Tick(std::chrono::milliseconds a_Dt, cChunk & a_Chunk)
 
 	if ((m_Attachee != nullptr) && (!m_bIsTame))
 	{
-		bool ForceTame = false;
-		if (m_Attachee->IsPlayer())
-		{
-			// If the mount is a player and they are in creative mode, instant tame.
-			if (static_cast<cPlayer*>(m_Attachee)->IsGameModeCreative())
-			{
-				ForceTame = true;
-			}
-		}
-
-		if (m_TameAttemptTimes < m_TimesToTame && !ForceTame)
+		if (m_TameAttemptTimes < m_TimesToTame)
 		{
 			if (m_World->GetTickRandomNumber(50) == 25)
 			{
@@ -77,12 +67,6 @@ void cHorse::Tick(std::chrono::milliseconds a_Dt, cChunk & a_Chunk)
 		else
 		{
 			m_bIsTame = true;
-			
-			if (ForceTame)
-			{
-				m_bIsSaddled = true;
-				m_World->BroadcastEntityMetadata(*this);
-			}
 		}
 	}
 	
@@ -145,9 +129,62 @@ void cHorse::OnRightClicked(cPlayer & a_Player)
 			m_Attachee->Detach();
 		}
 
+		// If the player is in creative mode and the horse is not tame or saddled, instant tame and saddle.
+		if (a_Player.IsGameModeCreative() && !(m_bIsTame || m_bIsSaddled))
+		{
+			m_bIsRearing = false;
+			m_bIsTame = true;
+			m_bIsSaddled = true;
+			m_World->BroadcastEntityMetadata(*this);
+		}
+
 		m_TameAttemptTimes++;
 		a_Player.AttachTo(this);
 	}
+}
+
+
+
+
+
+void cHorse::HandleSpeedFromAttachee(float a_Forward, float a_Sideways, bool a_IsJumping)
+{
+	if (!IsPlayerControlled())
+	{
+		return;
+	}
+
+	// TODO: Handle jumping
+
+	super::HandleSpeedFromAttachee(a_Forward * 10.0f, a_Sideways * 5.0f, a_IsJumping);
+}
+
+
+
+
+
+void cHorse::OnEntityAttached(cEntity & a_Attachee)
+{
+	super::OnEntityAttached(a_Attachee);
+
+	if (IsPlayerControlled())
+	{
+		// Stop the horse and disable path finding.
+		// As a player is now controlling the horse movement.
+		m_PathfinderEnabled = false;
+		StopMovingToPosition();
+		SetSpeed(0.0, 0.0, 0.0);
+	}
+}
+
+
+
+
+
+void cHorse::OnEntityDetached(cEntity & a_Detachee)
+{
+	super::OnEntityDetached(a_Detachee);
+	m_PathfinderEnabled = true;
 }
 
 

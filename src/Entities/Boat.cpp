@@ -118,7 +118,7 @@ void cBoat::Tick(std::chrono::milliseconds a_Dt, cChunk & a_Chunk)
 
 
 
-void cBoat::HandleSpeedFromAttachee(float a_Forward, float a_Sideways)
+void cBoat::HandleSpeedFromAttachee(float a_Forward, float a_Sideways, bool a_IsJumping)
 {
 	if (GetSpeed().Length() > 7.5)
 	{

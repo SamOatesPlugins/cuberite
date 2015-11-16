@@ -1782,8 +1782,17 @@ void cEntity::AttachTo(cEntity * a_AttachTo)
 
 	// Attach to the new entity:
 	m_AttachedTo = a_AttachTo;
-	a_AttachTo->m_Attachee = this;
+	a_AttachTo->OnEntityAttached(*this);
 	m_World->BroadcastAttachEntity(*this, a_AttachTo);
+}
+
+
+
+
+
+void cEntity::OnEntityAttached(cEntity & a_Attachee)
+{
+	m_Attachee = &a_Attachee;
 }
 
 
@@ -1797,9 +1806,18 @@ void cEntity::Detach(void)
 		// Attached to no entity, our work is done
 		return;
 	}
-	m_AttachedTo->m_Attachee = nullptr;
+	m_AttachedTo->OnEntityDetached(*this);
 	m_AttachedTo = nullptr;
 	m_World->BroadcastAttachEntity(*this, nullptr);
+}
+
+
+
+
+
+void cEntity::OnEntityDetached(cEntity & a_Detachee)
+{
+	m_Attachee = nullptr;
 }
 
 
@@ -1956,7 +1974,7 @@ void cEntity::AddSpeedZ(double a_AddSpeedZ)
 
 
 
-void cEntity::HandleSpeedFromAttachee(float a_Forward, float a_Sideways)
+void cEntity::HandleSpeedFromAttachee(float a_Forward, float a_Sideways, bool a_IsJumping)
 {
 	Vector3d LookVector = m_Attachee->GetLookVector();
 	double AddSpeedX = LookVector.x * a_Forward + LookVector.z * a_Sideways;
@@ -1969,16 +1987,14 @@ void cEntity::HandleSpeedFromAttachee(float a_Forward, float a_Sideways)
 
 
 
-void cEntity::SteerVehicle(float a_Forward, float a_Sideways)
+void cEntity::SteerVehicle(float a_Forward, float a_Sideways, bool a_IsJumping)
 {
 	if (m_AttachedTo == nullptr)
 	{
 		return;
 	}
-	if ((a_Forward != 0.0f) || (a_Sideways != 0.0f))
-	{
-		m_AttachedTo->HandleSpeedFromAttachee(a_Forward, a_Sideways);
-	}
+
+	m_AttachedTo->HandleSpeedFromAttachee(a_Forward, a_Sideways, a_IsJumping);
 }
 
 

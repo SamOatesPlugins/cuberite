@@ -2225,7 +2225,7 @@ void cProtocol172::HandlePacketSteerVehicle(cByteBuffer & a_ByteBuffer)
 	}
 	else
 	{
-		m_Client->HandleSteerVehicle(Forward, Sideways);
+		m_Client->HandleSteerVehicle(Forward, Sideways, ShouldJump);
 	}
 }
 

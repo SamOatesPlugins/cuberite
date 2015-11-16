@@ -2485,17 +2485,18 @@ void cProtocol180::HandlePacketSlotSelect(cByteBuffer & a_ByteBuffer)
 
 void cProtocol180::HandlePacketSteerVehicle(cByteBuffer & a_ByteBuffer)
 {
-	HANDLE_READ(a_ByteBuffer, ReadBEFloat, float, Forward);
 	HANDLE_READ(a_ByteBuffer, ReadBEFloat, float, Sideways);
+	HANDLE_READ(a_ByteBuffer, ReadBEFloat, float, Forward);
 	HANDLE_READ(a_ByteBuffer, ReadBEUInt8, UInt8, Flags);
 
 	if ((Flags & 0x2) != 0)
 	{
 		m_Client->HandleUnmount();
 	}
-	else if ((Flags & 0x1) != 0)
+	else
 	{
-		m_Client->HandleSteerVehicle(Forward, Sideways);
+		const bool IsJumping = ((Flags & 0x1) != 0);
+		m_Client->HandleSteerVehicle(Forward, Sideways, IsJumping);
 	}
 }
 

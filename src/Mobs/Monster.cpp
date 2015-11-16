@@ -77,6 +77,7 @@ cMonster::cMonster(const AString & a_ConfigName, eMonsterType a_MobType, const A
 	, m_Path(nullptr)
 	, m_IsFollowingPath(false)
 	, m_PathfinderActivated(false)
+	, m_PathfinderEnabled(true)
 	, m_GiveUpCounter(0)
 	, m_TicksSinceLastPathReset(1000)
 	, m_LastGroundHeight(POSY_TOINT)
@@ -125,7 +126,7 @@ void cMonster::SpawnOn(cClientHandle & a_Client)
 
 bool cMonster::TickPathFinding(cChunk & a_Chunk)
 {
-	if (!m_PathfinderActivated)
+	if ((!m_PathfinderEnabled) || (!m_PathfinderActivated))
 	{
 		return false;
 	}
@@ -478,7 +479,11 @@ void cMonster::Tick(std::chrono::milliseconds a_Dt, cChunk & a_Chunk)
 		}
 	}
 
-	SetPitchAndYawFromDestination();
+	if (m_PathfinderEnabled)
+	{
+		SetPitchAndYawFromDestination();
+	}
+	
 	HandleFalling();
 
 	switch (m_EMState)

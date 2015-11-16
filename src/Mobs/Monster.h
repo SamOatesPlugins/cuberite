@@ -176,6 +176,9 @@ protected:
 	/** Stores if pathfinder is being used - set when final destination is set, and unset when stopped moving to final destination */
 	bool m_PathfinderActivated;
 
+	/** Used to disable the path finder, this is required when mounted by a player who is controlling the entity */
+	bool m_PathfinderEnabled;
+
 	/* If 0, will give up reaching the next m_NextWayPointPosition and will re-compute path. */
 	int m_GiveUpCounter;
 	int m_TicksSinceLastPathReset;

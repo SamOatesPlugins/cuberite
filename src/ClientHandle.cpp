@@ -1524,9 +1524,9 @@ void cClientHandle::HandleSlotSelected(Int16 a_SlotNum)
 
 
 
-void cClientHandle::HandleSteerVehicle(float a_Forward, float a_Sideways)
+void cClientHandle::HandleSteerVehicle(float a_Forward, float a_Sideways, bool a_IsJumping)
 {
-	m_Player->SteerVehicle(a_Forward, a_Sideways);
+	m_Player->SteerVehicle(a_Forward, a_Sideways, a_IsJumping);
 }
 
 

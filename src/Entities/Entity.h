@@ -247,8 +247,8 @@ public:
 	void AddSpeedY  (double a_AddSpeedY);
 	void AddSpeedZ  (double a_AddSpeedZ);
 
-	virtual void HandleSpeedFromAttachee(float a_Forward, float a_Sideways);
-	void SteerVehicle(float a_Forward, float a_Sideways);
+	virtual void HandleSpeedFromAttachee(float a_Forward, float a_Sideways, bool a_IsJumping);
+	void SteerVehicle(float a_Forward, float a_Sideways, bool a_IsJumping);
 
 	inline UInt32 GetUniqueID(void) const { return m_UniqueID; }
 	inline bool IsDestroyed(void) const { return !m_IsInitialized; }
@@ -416,8 +416,14 @@ public:
 	/** Attaches to the specified entity; detaches from any previous one first */
 	void AttachTo(cEntity * a_AttachTo);
 
+	/** Called when an entity attaches itself to this entity */
+	virtual void OnEntityAttached(cEntity & a_Atachee);
+	
 	/** Detaches from the currently attached entity, if any */
 	virtual void Detach(void);
+
+	/** Called when an entity detaches itself from this entity */
+	virtual void OnEntityDetached(cEntity & a_Detachee);
 
 	/** Makes sure head yaw is not over the specified range. */
 	void WrapHeadYaw();

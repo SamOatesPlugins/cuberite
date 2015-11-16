@@ -333,7 +333,7 @@ public:  // tolua_export
 	void HandleRespawn          (void);
 	void HandleRightClick       (int a_BlockX, int a_BlockY, int a_BlockZ, eBlockFace a_BlockFace, int a_CursorX, int a_CursorY, int a_CursorZ, const cItem & a_HeldItem);
 	void HandleSlotSelected     (Int16 a_SlotNum);
-	void HandleSteerVehicle     (float Forward, float Sideways);
+	void HandleSteerVehicle     (float a_Forward, float a_Sideways, bool a_IsJumping);
 	void HandleTabCompletion    (const AString & a_Text);
 	void HandleUpdateSign       (
 		int a_BlockX, int a_BlockY, int a_BlockZ,
