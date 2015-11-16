@@ -300,6 +300,9 @@ public:  // tolua_export
 	void HandleEntityLeaveBed         (UInt32 a_EntityID);
 	void HandleEntitySprinting        (UInt32 a_EntityID, bool a_IsSprinting);
 	
+	/** Called when a horse jumps and a player is in control. JumpBoost 0 -> 100 */
+	void HandleEntityJumping(UInt32 a_EntityID, UInt32 a_JumpBoost);
+
 	/** Kicks the client if the same username is already logged in.
 	Returns false if the client has been kicked, true otherwise. */
 	bool CheckMultiLogin(const AString & a_Username);

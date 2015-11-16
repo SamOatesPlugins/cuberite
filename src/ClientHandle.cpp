@@ -1772,6 +1772,21 @@ void cClientHandle::HandleEntitySprinting(UInt32 a_EntityID, bool a_IsSprinting)
 
 
 
+void cClientHandle::HandleEntityJumping(UInt32 a_EntityID, UInt32 a_JumpBoost)
+{
+	if (a_EntityID != m_Player->GetUniqueID())
+	{
+		// We should only receive entity actions from the entity that is performing the action
+		return;
+	}
+
+	m_Player->HandleEntityJumping(a_JumpBoost);
+}
+
+
+
+
+
 void cClientHandle::HandleUnmount(void)
 {
 	if (m_Player == nullptr)

@@ -154,9 +154,13 @@ void cHorse::HandleSpeedFromAttachee(float a_Forward, float a_Sideways, bool a_I
 		return;
 	}
 
-	// TODO: Handle jumping
-
-	super::HandleSpeedFromAttachee(a_Forward * 10.0f, a_Sideways * 5.0f, a_IsJumping);
+	// TODO: Take into account horse speed.
+	
+	Vector3d LookVector = m_Attachee->GetLookVector();
+	double AddSpeedX = LookVector.x * (a_Forward * 10.0f) + LookVector.z * (a_Sideways * 10.0f);
+	double AddSpeedZ = LookVector.z * (a_Forward * 10.0f) - LookVector.x * (a_Sideways * 10.0f);
+	SetSpeed(AddSpeedX, m_Speed.y, AddSpeedZ);
+	BroadcastMovementUpdate();
 }
 
 
@@ -185,6 +189,21 @@ void cHorse::OnEntityDetached(cEntity & a_Detachee)
 {
 	super::OnEntityDetached(a_Detachee);
 	m_PathfinderEnabled = true;
+}
+
+
+
+
+
+void cHorse::SetJumpBoost(UInt32 a_JumpBoost)
+{
+	if (!IsPlayerControlled())
+	{
+		return;
+	}
+
+	// Todo: Take into account horse jump power.
+	AddSpeedY(a_JumpBoost * 0.1);
 }
 
 

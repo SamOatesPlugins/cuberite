@@ -2351,6 +2351,7 @@ void cProtocol180::HandlePacketEntityAction(cByteBuffer & a_ByteBuffer)
 		case 2: m_Client->HandleEntityLeaveBed(PlayerID);         break;  // Leave Bed
 		case 3: m_Client->HandleEntitySprinting(PlayerID, true);  break;  // Start sprinting
 		case 4: m_Client->HandleEntitySprinting(PlayerID, false); break;  // Stop sprinting
+		case 5: m_Client->HandleEntityJumping(PlayerID, JumpBoost); break;  // Horse jump
 	}
 }
 

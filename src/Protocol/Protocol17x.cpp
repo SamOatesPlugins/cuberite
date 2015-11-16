@@ -2078,6 +2078,7 @@ void cProtocol172::HandlePacketEntityAction(cByteBuffer & a_ByteBuffer)
 		case 3: m_Client->HandleEntityLeaveBed(PlayerID);         break;  // Leave Bed
 		case 4: m_Client->HandleEntitySprinting(PlayerID, true);  break;  // Start sprinting
 		case 5: m_Client->HandleEntitySprinting(PlayerID, false); break;  // Stop sprinting
+		case 6: break;  // Horse jump
 	}
 }
 
@@ -2215,8 +2216,8 @@ void cProtocol172::HandlePacketSlotSelect(cByteBuffer & a_ByteBuffer)
 
 void cProtocol172::HandlePacketSteerVehicle(cByteBuffer & a_ByteBuffer)
 {
-	HANDLE_READ(a_ByteBuffer, ReadBEFloat, float, Forward);
 	HANDLE_READ(a_ByteBuffer, ReadBEFloat, float, Sideways);
+	HANDLE_READ(a_ByteBuffer, ReadBEFloat, float, Forward);
 	HANDLE_READ(a_ByteBuffer, ReadBool,    bool,  ShouldJump);
 	HANDLE_READ(a_ByteBuffer, ReadBool,    bool,  ShouldUnmount);
 	if (ShouldUnmount)

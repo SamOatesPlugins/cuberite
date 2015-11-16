@@ -424,6 +424,9 @@ public:
 	/** Starts or stops sprinting, sends the max speed update to the client, if needed */
 	void SetSprint(bool a_IsSprinting);
 
+	/** Called when an entity action event with the ID 'Jump' is called. Used for horses currently (1.7 - 1.8) */
+	void HandleEntityJumping(UInt32 a_JumpBoost);
+
 	/** Flags the player as flying */
 	void SetFlying(bool a_IsFlying);
 

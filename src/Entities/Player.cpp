@@ -25,6 +25,8 @@
 #include "../Blocks/BlockSlab.h"
 #include "../Blocks/ChunkInterface.h"
 
+#include "../Mobs/Horse.h"
+
 #include "../IniFile.h"
 #include "json/json.h"
 
@@ -828,6 +830,28 @@ void cPlayer::SetSprint(bool a_IsSprinting)
 
 	m_IsSprinting = a_IsSprinting;
 	m_ClientHandle->SendPlayerMaxSpeed();
+}
+
+
+
+
+
+
+void cPlayer::HandleEntityJumping(UInt32 a_JumpBoost)
+{
+	if (m_AttachedTo == nullptr)
+	{
+		return;
+	}
+
+	if (m_AttachedTo->GetEntityType() == cEntity::etMonster)
+	{
+		cMonster * const Monster = static_cast<cMonster*>(m_AttachedTo);
+		if (Monster->GetMobType() == mtHorse)
+		{
+			static_cast<cHorse*>(Monster)->SetJumpBoost(a_JumpBoost);
+		}
+	}
 }
 
 

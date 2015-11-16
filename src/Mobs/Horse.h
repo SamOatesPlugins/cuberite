@@ -30,6 +30,9 @@ public:
 	/** Called when an entity detaches itself from this horse */
 	virtual void OnEntityDetached(cEntity & a_Detachee) override;
 
+	/** Make the horse jump. JumpBoost is 0 -> 100 */
+	void SetJumpBoost(UInt32 a_JumpBoost);
+
 	bool IsSaddled      (void) const  {return m_bIsSaddled; }
 	bool IsChested      (void) const  {return m_bHasChest; }
 	bool IsEating       (void) const  {return m_bIsEating; }
