@@ -51,7 +51,17 @@ void cHorse::Tick(std::chrono::milliseconds a_Dt, cChunk & a_Chunk)
 
 	if ((m_Attachee != nullptr) && (!m_bIsTame))
 	{
-		if (m_TameAttemptTimes < m_TimesToTame)
+		bool ForceTame = false;
+		if (m_Attachee->IsPlayer())
+		{
+			// If the mount is a player and they are in creative mode, instant tame.
+			if (static_cast<cPlayer*>(m_Attachee)->IsGameModeCreative())
+			{
+				ForceTame = true;
+			}
+		}
+
+		if (m_TameAttemptTimes < m_TimesToTame && !ForceTame)
 		{
 			if (m_World->GetTickRandomNumber(50) == 25)
 			{
@@ -67,6 +77,12 @@ void cHorse::Tick(std::chrono::milliseconds a_Dt, cChunk & a_Chunk)
 		else
 		{
 			m_bIsTame = true;
+			
+			if (ForceTame)
+			{
+				m_bIsSaddled = true;
+				m_World->BroadcastEntityMetadata(*this);
+			}
 		}
 	}
 	
