@@ -2306,25 +2306,47 @@ bool cPlayer::PlaceBlocks(const sSetBlockVector & a_Blocks)
 
 void cPlayer::Detach()
 {
-	super::Detach();
-	int PosX = POSX_TOINT;
-	int PosY = POSY_TOINT;
-	int PosZ = POSZ_TOINT;
-
-	// Search for a position within an area to teleport player after detachment
-	// Position must be solid land, and occupied by a nonsolid block
-	// If nothing found, player remains where they are
-	for (int x = PosX - 2; x <= (PosX + 2); ++x)
+	if (m_AttachedTo == nullptr)
 	{
-		for (int y = PosY; y <= (PosY + 3); ++y)
+		// Attached to no entity, our work is done
+		return;
+	}
+
+	Vector3i AttachedToPosition(
+		static_cast<int>(m_AttachedTo->GetPosX()), 
+		static_cast<int>(m_AttachedTo->GetPosY()), 
+		static_cast<int>(m_AttachedTo->GetPosZ())
+	);
+
+	super::Detach();
+
+	static const Vector3i RadialSearch[] =
+	{
+		Vector3i(0, 0, 1),
+		Vector3i(1, 0, 1),
+		Vector3i(1, 0, 0),
+		Vector3i(1, 0, -1),
+		Vector3i(0, 0, -1),
+		Vector3i(-1, 0, -1),
+		Vector3i(-1, 0, 0),
+		Vector3i(-1, 0, 1),
+	};
+
+	static const int RadiiCount = ARRAYCOUNT(RadialSearch);
+
+	for (int Radius = 1; Radius <= 2; ++Radius)
+	{
+		for (int RadiiIndex = 0; RadiiIndex < RadiiCount; ++RadiiIndex)
 		{
-			for (int z = PosZ - 2; z <= (PosZ + 2); ++z)
+			const Vector3i PositionToCheck = AttachedToPosition + (RadialSearch[RadiiIndex] * Radius);
+			const int X = PositionToCheck.x;
+			const int Y = PositionToCheck.y;
+			const int Z = PositionToCheck.z;
+
+			if (!cBlockInfo::IsSolid(m_World->GetBlock(X, Y, Z)) && cBlockInfo::IsSolid(m_World->GetBlock(X, Y - 1, Z)))
 			{
-				if (!cBlockInfo::IsSolid(m_World->GetBlock(x, y, z)) && cBlockInfo::IsSolid(m_World->GetBlock(x, y - 1, z)))
-				{
-					TeleportToCoords(x, y, z);
-					return;
-				}
+				TeleportToCoords(X, Y, Z);
+				return;
 			}
 		}
 	}
