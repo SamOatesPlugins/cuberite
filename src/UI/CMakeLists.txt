@@ -7,6 +7,7 @@ include_directories ("${PROJECT_SOURCE_DIR}/../")
 SET (SRCS
 	SlotArea.cpp
 	Window.cpp
+	AnimalChestWindow.cpp
 	AnvilWindow.cpp
 	BeaconWindow.cpp
 	BrewingstandWindow.cpp
@@ -22,6 +23,7 @@ SET (SRCS
 SET (HDRS
 	SlotArea.h
 	Window.h
+	AnimalChestWindow.h
 	AnvilWindow.h
 	BeaconWindow.h
 	BrewingstandWindow.h

@@ -38,6 +38,7 @@ Implements the 1.8.x protocol classes:
 
 #include "../Mobs/IncludeAllMonsters.h"
 #include "../UI/Window.h"
+#include "../UI/AnimalChestWindow.h"
 
 #include "../BlockEntities/BeaconEntity.h"
 #include "../BlockEntities/CommandBlockEntity.h"
@@ -1615,7 +1616,15 @@ void cProtocol180::SendWindowOpen(const cWindow & a_Window)
 
 	if (a_Window.GetWindowType() == cWindow::wtAnimalChest)
 	{
-		Pkt.WriteBEInt32(0);  // TODO: The animal's EntityID
+		const cPassiveMonster * Animal = static_cast<const cAnimalChestWindow *>(&a_Window)->GetOwningAnimal();
+		if (Animal != nullptr)
+		{
+			Pkt.WriteBEInt32(Animal->GetUniqueID());
+		}
+		else
+		{
+			Pkt.WriteBEInt32(0);
+		}
 	}
 }
 

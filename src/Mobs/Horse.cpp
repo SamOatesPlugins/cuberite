@@ -3,7 +3,7 @@
 #include "Horse.h"
 #include "../World.h"
 #include "../Entities/Player.h"
-
+#include "../UI/AnimalChestWindow.h"
 
 
 
@@ -92,6 +92,13 @@ void cHorse::Tick(std::chrono::milliseconds a_Dt, cChunk & a_Chunk)
 
 void cHorse::OnRightClicked(cPlayer & a_Player)
 {
+	if (a_Player.IsCrouched() && m_bIsTame)
+	{
+		// Open horse inventory.
+		a_Player.OpenWindow(new cAnimalChestWindow(this));
+		return;
+	}
+	
 	if (!m_bIsSaddled && m_bIsTame)
 	{
 		if (a_Player.GetEquippedItem().m_ItemType == E_ITEM_SADDLE)
@@ -113,33 +120,46 @@ void cHorse::OnRightClicked(cPlayer & a_Player)
 	}
 	else
 	{
-		if (m_Attachee != nullptr)
+		if ((m_bIsSaddled) && (m_bIsTame) && (a_Player.GetEquippedItem().m_ItemType == E_BLOCK_CHEST)
+			&& (!m_bHasChest) && ((m_Type == HorseType::Donkey) || (m_Type == HorseType::Mule)))
 		{
-			if (m_Attachee->GetUniqueID() == a_Player.GetUniqueID())
+			if (!a_Player.IsGameModeCreative())
 			{
-				a_Player.Detach();
-				return;
+				a_Player.GetInventory().RemoveOneEquippedItem();
 			}
-
-			if (m_Attachee->IsPlayer())
-			{
-				return;
-			}
-
-			m_Attachee->Detach();
-		}
-
-		// If the player is in creative mode and the horse is not tame or saddled, instant tame and saddle.
-		if (a_Player.IsGameModeCreative() && !(m_bIsTame || m_bIsSaddled))
-		{
-			m_bIsRearing = false;
-			m_bIsTame = true;
-			m_bIsSaddled = true;
+			m_bHasChest = true;
 			m_World->BroadcastEntityMetadata(*this);
 		}
+		else
+		{
+			if (m_Attachee != nullptr)
+			{
+				if (m_Attachee->GetUniqueID() == a_Player.GetUniqueID())
+				{
+					a_Player.Detach();
+					return;
+				}
 
-		m_TameAttemptTimes++;
-		a_Player.AttachTo(this);
+				if (m_Attachee->IsPlayer())
+				{
+					return;
+				}
+
+				m_Attachee->Detach();
+			}
+
+			// If the player is in creative mode and the horse is not tame or saddled, instant tame and saddle.
+			if (a_Player.IsGameModeCreative() && !(m_bIsTame || m_bIsSaddled))
+			{
+				m_bIsRearing = false;
+				m_bIsTame = true;
+				m_bIsSaddled = true;
+				m_World->BroadcastEntityMetadata(*this);
+			}
+
+			m_TameAttemptTimes++;
+			a_Player.AttachTo(this);
+		}
 	}
 }
 
@@ -223,6 +243,34 @@ void cHorse::GetDrops(cItems & a_Drops, cEntity * a_Killer)
 		a_Drops.push_back(cItem(E_ITEM_SADDLE, 1));
 	}
 }
+
+
+
+
+
+int cHorse::GetHorseArmour(void) const
+{
+	switch (m_Armour)
+	{
+		case E_ITEM_IRON_HORSE_ARMOR:
+		{
+			return 1;
+		}
+
+		case E_ITEM_GOLD_HORSE_ARMOR:
+		{
+			return 2;
+		}
+
+		case E_ITEM_DIAMOND_HORSE_ARMOR:
+		{
+			return 3;
+		}
+	}
+
+	return 0;
+}
+
 
 
 

@@ -2317,9 +2317,16 @@ void cWSSAnvil::LoadGuardianFromNBT(cEntityList & a_Entities, const cParsedNBT &
 
 void cWSSAnvil::LoadHorseFromNBT(cEntityList & a_Entities, const cParsedNBT & a_NBT, int a_TagIdx)
 {
-	int TypeIdx  = a_NBT.FindChildByName(a_TagIdx, "Type");
-	int ColorIdx = a_NBT.FindChildByName(a_TagIdx, "Color");
-	int StyleIdx = a_NBT.FindChildByName(a_TagIdx, "Style");
+	const int ChestedIdx = a_NBT.FindChildByName(a_TagIdx, "ChestedHorse");
+	const int EatingHaystackIdx = a_NBT.FindChildByName(a_TagIdx, "EatingHaystack");
+	const int TameIdx = a_NBT.FindChildByName(a_TagIdx, "Tame");
+	const int TypeIdx = a_NBT.FindChildByName(a_TagIdx, "Type");
+	const int ColorIdx = a_NBT.FindChildByName(a_TagIdx, "Color");
+	const int StyleIdx = a_NBT.FindChildByName(a_TagIdx, "Style");
+	const int ArmorTypeIdx = a_NBT.FindChildByName(a_TagIdx, "ArmorType");
+	const int SaddleIdx = a_NBT.FindChildByName(a_TagIdx, "Saddle");
+	const int AgeableIdx = a_NBT.FindChildByName(a_TagIdx, "Age");
+
 	if ((TypeIdx < 0) || (ColorIdx < 0) || (StyleIdx < 0))
 	{
 		return;
@@ -2340,8 +2347,25 @@ void cWSSAnvil::LoadHorseFromNBT(cEntityList & a_Entities, const cParsedNBT & a_
 	{
 		return;
 	}
-	
-	int AgeableIdx  = a_NBT.FindChildByName(a_TagIdx, "Age");
+
+	if (TameIdx > 0)
+	{
+		bool Tame = a_NBT.GetByte(TameIdx) == 1;
+		Monster->SetIsTame(Tame);
+	}
+
+	if (SaddleIdx > 0)
+	{
+		bool Saddled = a_NBT.GetByte(SaddleIdx) == 1;
+		Monster->SetIsSaddled(Saddled);
+	}
+
+	if (ChestedIdx > 0)
+	{
+		bool Chested = a_NBT.GetByte(ChestedIdx) == 1;
+		Monster->SetIsChested(Chested);
+	}
+
 	if (AgeableIdx > 0)
 	{
 		Byte Age = a_NBT.GetByte(AgeableIdx);

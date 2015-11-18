@@ -2337,8 +2337,8 @@ void cPlayer::Detach()
 	}
 
 	Vector3i AttachedToPosition(
-		static_cast<int>(m_AttachedTo->GetPosX()), 
-		static_cast<int>(m_AttachedTo->GetPosY()), 
+		static_cast<int>(m_AttachedTo->GetPosX()),
+		static_cast<int>(m_AttachedTo->GetPosY()),
 		static_cast<int>(m_AttachedTo->GetPosZ())
 	);
 

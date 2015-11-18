@@ -13,6 +13,21 @@ class cHorse :
 	typedef cPassiveMonster super;
 	
 public:
+
+	struct HorseType
+	{
+		enum Enum
+		{
+			Horse = 0,
+			Donkey = 1,
+			Mule = 2,
+			Zombie = 3,
+			Skeleton = 4,
+			HorseCount
+		};
+	};
+
+public:
 	cHorse(int Type, int Color, int Style, int TameTimes);
 
 	CLASS_PROTODEF(cHorse)
@@ -39,11 +54,15 @@ public:
 	bool IsRearing      (void) const  {return m_bIsRearing; }
 	bool IsMthOpen      (void) const  {return m_bIsMouthOpen; }
 	bool IsTame         (void) const override {return m_bIsTame; }
-	bool IsPlayerControlled (void) const  {return m_Attachee != nullptr && m_Attachee->GetEntityType() == etPlayer && IsSaddled() && IsTame();}
+	bool IsPlayerControlled (void) const  {return (m_Attachee != nullptr) && (m_Attachee->GetEntityType() == etPlayer) && IsSaddled() && IsTame();}
 	int  GetHorseType   (void) const  {return m_Type; }
 	int  GetHorseColor  (void) const  {return m_Color; }
 	int  GetHorseStyle  (void) const  {return m_Style; }
-	int  GetHorseArmour (void) const  {return m_Armour;}
+	int  GetHorseArmour (void) const;
+
+	void SetIsTame      (bool a_IsTame) {m_bIsTame = a_IsTame;}
+	void SetIsSaddled   (bool a_IsSaddled)  {m_bIsSaddled = a_IsSaddled;}
+	void SetIsChested   (bool a_IsChested)  {m_bHasChest = a_IsChested;}
 
 private:
 
